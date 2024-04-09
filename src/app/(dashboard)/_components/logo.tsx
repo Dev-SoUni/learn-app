@@ -6,7 +6,7 @@ export function Logo(){
       height={30}
       width={30}
       alt="logo"
-      src="logo.svg"
+      src="/logo.svg"
       />
   )
 }

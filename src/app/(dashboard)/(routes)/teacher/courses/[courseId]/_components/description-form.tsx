@@ -8,6 +8,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { zodResolver} from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { cn } from '@/lib/utils'
 
 import {
   Form,
@@ -18,25 +19,26 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {Textarea} from "@/components/ui/textarea";
 
 
-interface  TitleFormProps {
+interface  DescriptionFormProps {
   initialData: {
-    title: string,
+    description: string | null,
   }
   courseId: string,
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: "제목은 필수 입력사항입니다."
+  description: z.string().min(1, {
+    message: "설명은 필수 입력사항입니다."
   }),
 })
 
-export function TitleForm({
+export function DescriptionForm({
   initialData,
   courseId,
-}: TitleFormProps) {
+}: DescriptionFormProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false)
 
   const toggleEdit = () => setIsEditing((current) => !current)
@@ -45,7 +47,9 @@ export function TitleForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      description: initialData.description || "",
+    },
   })
 
   const { isSubmitting, isValid } = form.formState
@@ -64,21 +68,24 @@ export function TitleForm({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
-          강좌명
+          강좌 설명
           <Button onClick={toggleEdit} variant="ghost">
             {isEditing ? (
               <>취소</>
             ) : (
               <>
                 <Pencil className="h-4 w-4 mr-2" />
-                강좌명 수정
+                설명 수정
               </>
             )}
           </Button>
         </div>
       {!isEditing && (
-        <p className="text-sm mt-2">
-          {initialData.title}
+        <p className={cn(
+          "text-sm mt-2",
+          !initialData.description && "text-slate-500 italic"
+        )}>
+          {initialData.description || "설명 없음"}
         </p>
       )}
       {isEditing && (
@@ -89,13 +96,13 @@ export function TitleForm({
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({field}) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <Textarea
                       disabled={isSubmitting}
-                      placeholder="강좌명"
+                      placeholder="강좌 설명"
                       {...field}
                     />
                   </FormControl>

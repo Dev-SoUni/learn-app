@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import { IconBadge } from "@/components/ui/icon-badge"
 
 import { TitleForm } from "./_components/title-form";
+import { DescriptionForm } from "./_components/description-form";
 
 export default async function CourseIdPage({
   params
@@ -63,6 +64,10 @@ export default async function CourseIdPage({
             </h2>
           </div>
           <TitleForm
+            initialData={course}
+            courseId={course.id}
+          />
+          <DescriptionForm
             initialData={course}
             courseId={course.id}
           />

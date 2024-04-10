@@ -2,8 +2,8 @@
 
 import * as z from "zod"
 import axios from "axios"
-import Link from "next/link";
-import { toast } from "sonner";
+import Link from "next/link"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 
@@ -41,9 +41,9 @@ export default function CreatePage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/course", values)
+      const response = await axios.post("/api/courses", values)
       router.push(`/teacher/courses/${response.data.id}`)
-
+      toast.success("새로운 강좌가 개설되었습니다.")
     } catch {
       toast.error("알 수 없는 오류가 발생했습니다.")
     }

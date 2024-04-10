@@ -4,6 +4,8 @@ import { Inter } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { koKR } from "@clerk/localizations"
 
+import { Toaster } from "@/components/ui/sonner"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -19,7 +21,10 @@ export default function RootLayout({
   return (
     <ClerkProvider localization={koKR} >
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+        {children}
+        <Toaster />
+        </body>
       </html>
     </ClerkProvider>
   )

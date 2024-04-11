@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
-import {CircleDollarSign, LayoutDashboard, ListChecks} from "lucide-react"
+import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react"
 
 import { db } from "@/lib/db"
 import { IconBadge } from "@/components/ui/icon-badge"
@@ -10,6 +10,7 @@ import { DescriptionForm } from "./_components/description-form"
 import { ImageForm } from "./_components/image-form"
 import { CategoryForm } from "./_components/category-form"
 import { PriceForm } from "./_components/price-form"
+import { AttachmentForm } from "./_components/attachment-form"
 
 export default async function CourseIdPage({
   params
@@ -20,13 +21,20 @@ export default async function CourseIdPage({
 }) {
   const { userId } = auth()
 
-  if (!userId){
+  if (!userId) {
     return redirect("/")
   }
   const course = await db.course.findUnique({
     where: {
       id: params.courseId
-    }
+    },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
   })
 
   const categories = await db.category.findMany({
@@ -98,7 +106,7 @@ export default async function CourseIdPage({
             <div className="flex items-center gap-x-2">
               <IconBadge icon={ListChecks}/>
               <h2 className="text-xl">
-                강좌 캡처
+                캡처
               </h2>
             </div>
             <div>
@@ -109,10 +117,22 @@ export default async function CourseIdPage({
             <div className="flex items-center gap-x-2">
               <IconBadge icon={CircleDollarSign} />
               <h2 className="text-xl">
-                강좌 가격
+                가격
               </h2>
             </div>
             <PriceForm
+              initialData={course}
+              courseId={course.id}
+            />
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={File}/>
+              <h2 className="text-xl">
+                첨부파일
+              </h2>
+            </div>
+            <AttachmentForm
               initialData={course}
               courseId={course.id}
             />

@@ -71,7 +71,7 @@ export function TitleForm({
             ) : (
               <>
                 <Pencil className="h-4 w-4 mr-2" />
-                강좌명 수정
+                수정
               </>
             )}
           </Button>

@@ -67,14 +67,14 @@ export function DescriptionForm({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
-          강좌 설명
+          설명
           <Button onClick={toggleEdit} variant="ghost">
             {isEditing ? (
               <>취소</>
             ) : (
               <>
                 <Pencil className="h-4 w-4 mr-2" />
-                설명 수정
+                수정
               </>
             )}
           </Button>

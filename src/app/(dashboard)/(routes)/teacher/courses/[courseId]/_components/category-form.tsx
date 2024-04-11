@@ -68,14 +68,14 @@ export function CategoryForm({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
-          강좌 카테고리
+          카테고리
           <Button onClick={toggleEdit} variant="ghost">
             {isEditing ? (
               <>취소</>
             ) : (
               <>
                 <Pencil className="h-4 w-4 mr-2" />
-                카테고리 수정
+                수정
               </>
             )}
           </Button>

@@ -50,7 +50,7 @@ export function ImageForm({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        강좌 이미지
+        이미지
         <Button
           variant="ghost"
           onClick={toggleEdit}

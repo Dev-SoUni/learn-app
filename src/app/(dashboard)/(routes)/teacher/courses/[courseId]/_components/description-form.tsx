@@ -19,13 +19,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {Textarea} from "@/components/ui/textarea";
+import {Textarea} from "@/components/ui/textarea"
+import type { Course } from "@prisma/client"
 
 
 interface  DescriptionFormProps {
-  initialData: {
-    description: string | null,
-  }
+  initialData: Course,
   courseId: string,
 }
 
@@ -117,7 +116,6 @@ export function DescriptionForm({
               >
                 저장
               </Button>
-
             </div>
           </form>
         </Form>

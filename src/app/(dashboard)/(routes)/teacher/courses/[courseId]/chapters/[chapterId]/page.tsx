@@ -4,10 +4,11 @@ import { redirect } from "next/navigation"
 
 import { db } from "@/lib/db"
 import Link from "next/link";
-import { ArrowLeft, LayoutDashboard } from "lucide-react"
+import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react"
 import { IconBadge } from "@/components/ui/icon-badge"
 import { ChapterTitleForm } from "./_components/chapter-title-form"
-import { ChapterDescriptionForm } from "./_components/chapter-description-form";
+import { ChapterDescriptionForm } from "./_components/chapter-description-form"
+import { ChapterAccessForm } from "./_components/chapter-access-form"
 
 export default async function ChapterId({
   params
@@ -55,7 +56,7 @@ export default async function ChapterId({
         <div className="w-full">
           <Link
             href={`/teacher/courses/${params.courseId}`}
-            className="flex items-center text-sm hover:opacity-75"
+            className="flex items-center text-sm hover:opacity-75 mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
               뒤로 가기
@@ -91,6 +92,27 @@ export default async function ChapterId({
               courseId={params.courseId}
               chapterId={params.chapterId}
             />
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={Eye} />
+              <h2 className="text-xl">
+                설정
+              </h2>
+            </div>
+            <ChapterAccessForm
+              initialData={chapter}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-x-2">
+            <IconBadge icon={Video} />
+            <h2 className="text-xl">
+              영상 등록
+            </h2>
           </div>
         </div>
       </div>

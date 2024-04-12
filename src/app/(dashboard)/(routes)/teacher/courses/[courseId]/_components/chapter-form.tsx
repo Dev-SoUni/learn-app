@@ -3,7 +3,7 @@
 import * as z from "zod"
 import axios from "axios"
 import { useForm } from "react-hook-form"
-import { PlusCircle } from "lucide-react"
+import { Loader2, PlusCircle } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { zodResolver} from "@hookform/resolvers/zod"
@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import type { Chapter, Course } from "@prisma/client"
 import { cn } from "@/lib/utils"
+import {ChaptersList } from "./chapters-list"
 
 
 interface  ChapterFormProps {
@@ -62,8 +63,33 @@ export function ChapterForm({
     }
   }
 
+  const onReorder = async (updateData: {id: string, position: number}[]) => {
+    try {
+      setIsUpdating(true)
+
+      await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
+        list: updateData
+      })
+      toast.success("챕터가 순서가 변경되었습니다.")
+      router.refresh()
+    } catch {
+      toast.error("오류가 발생했습니다.")
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const onEdit = (id: string) => {
+    router.push(`/teacher/courses/${courseId}/chapters/${id}`)
+  }
+
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {isUpdating && (
+        <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-m flex items-center justify-center">
+          <Loader2 className="animate-spin h-6 w-6 text-sky-700"/>
+        </div>
+      )}
         <div className="font-medium flex items-center justify-between">
           챕터
           <Button onClick={toggleCreating} variant="ghost">
@@ -114,6 +140,11 @@ export function ChapterForm({
           !initialData.chapters.length && "text-slate-500 italic"
         )}>
           {!initialData.chapters.length && "챕터 없음"}
+          <ChaptersList
+            onEdit={onEdit}
+            onReorder={onReorder}
+            items={initialData.chapters || []}
+          />
         </div>
       )}
       {!isCreating && (

@@ -3,12 +3,11 @@
 import * as z from "zod"
 import axios from "axios"
 import { useForm } from "react-hook-form"
-import { Pencil } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { zodResolver} from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { cn } from '@/lib/utils'
 
 import {
   Form,
@@ -17,36 +16,36 @@ import {
   FormItem,
   FormMessage
 } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {Textarea} from "@/components/ui/textarea"
-import type { Course } from "@prisma/client"
+import type { Chapter, Course } from "@prisma/client"
+import { cn } from "@/lib/utils"
 
 
-interface  DescriptionFormProps {
-  initialData: Course,
+interface  ChapterFormProps {
+  initialData: Course & { chapters: Chapter[] },
   courseId: string,
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "설명은 필수 입력사항입니다."
-  }),
+  title: z.string().min(1),
 })
 
-export function DescriptionForm({
+export function ChapterForm({
   initialData,
   courseId,
-}: DescriptionFormProps) {
-  const [isEditing, setIsEditing] = useState<boolean>(false)
+}: ChapterFormProps) {
+  const [isCreating, setIsCreating] = useState<boolean>(false)
+  const [isUpdating, setIsUpdating] = useState<boolean>(false)
 
-  const toggleEdit = () => setIsEditing((current) => !current)
+  const toggleCreating = () => setIsCreating((current) => !current)
 
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData.description || "",
+      title: "",
     },
   })
 
@@ -54,9 +53,9 @@ export function DescriptionForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values)
-      toast.success("강좌가 수정되었습니다.")
-      toggleEdit()
+      await axios.post(`/api/courses/${courseId}/chapters`, values)
+      toast.success("챕터가 등록되었습니다.")
+      toggleCreating()
       router.refresh()
     } catch {
       toast.error("알 수 없는 오류가 발생했습니다.")
@@ -66,27 +65,19 @@ export function DescriptionForm({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
         <div className="font-medium flex items-center justify-between">
-          설명
-          <Button onClick={toggleEdit} variant="ghost">
-            {isEditing ? (
+          챕터
+          <Button onClick={toggleCreating} variant="ghost">
+            {isCreating ? (
               <>취소</>
             ) : (
               <>
-                <Pencil className="h-4 w-4 mr-2" />
-                수정
+                <PlusCircle className="h-4 w-4 mr-2" />
+                등록
               </>
             )}
           </Button>
         </div>
-      {!isEditing && (
-        <p className={cn(
-          "text-sm mt-2",
-          !initialData.description && "text-slate-500 italic"
-        )}>
-          {initialData.description || "설명 없음"}
-        </p>
-      )}
-      {isEditing && (
+      {isCreating && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -94,13 +85,13 @@ export function DescriptionForm({
           >
             <FormField
               control={form.control}
-              name="description"
+              name="title"
               render={({field}) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
                       disabled={isSubmitting}
-                      placeholder="설명"
+                      placeholder="챕터"
                       {...field}
                     />
                   </FormControl>
@@ -108,16 +99,27 @@ export function DescriptionForm({
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Button
-                disabled={!isValid || isSubmitting}
-                type="submit"
-              >
-                저장
-              </Button>
-            </div>
+            <Button
+              disabled={!isValid || isSubmitting}
+              type="submit"
+            >
+              등록
+            </Button>
           </form>
         </Form>
+      )}
+      {!isCreating && (
+        <div className={cn(
+          "text-sm mt-2",
+          !initialData.chapters.length && "text-slate-500 italic"
+        )}>
+          {!initialData.chapters.length && "챕터 없음"}
+        </div>
+      )}
+      {!isCreating && (
+        <p className="text-sm text-muted-foreground mt-4">
+          드래그 그랍로 챕터 순서를 변경할 수 있습니다.
+        </p>
       )}
     </div>
   )

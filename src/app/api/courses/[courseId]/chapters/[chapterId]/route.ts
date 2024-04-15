@@ -3,11 +3,92 @@ import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 
 import { db } from '@/lib/db'
+import {Video} from "lucide-react";
 
 const mux = new Mux({
   tokenId: process.env.MUX_TOKEN_ID,
   tokenSecret: process.env.NODE_TOKEN_SECRET,
 })
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { courseId: string, chapterId: string } }
+){
+  try {
+    const { userId } = auth()
+    if (!userId) {
+      return new NextResponse("권한 없음", { status: 401 })
+    }
+
+    const courseOwner = await db.course.findUnique({
+      where: {
+        id: params.courseId,
+        userId,
+      },
+    })
+    if (!courseOwner) {
+      return new NextResponse("권한 없음", { status: 401 })
+    }
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        id: params.chapterId,
+        courseId: params.courseId,
+      }
+    })
+
+    if (!chapter) {
+      return new NextResponse("챕터를 찾을 수 없습니다.", { status: 404 })
+    }
+
+    if (chapter.videoUrl) {
+      const existingMuxData = await db.muxData.findFirst({
+        where: {
+          chapterId: params.chapterId
+        }
+      })
+
+      if (existingMuxData) {
+        await mux.video.assets.delete(existingMuxData.assetId)
+        await db.muxData.delete({
+          where: {
+            id: existingMuxData.id,
+          },
+        })
+      }
+    }
+
+    const deletedChapter = await db.chapter.delete({
+      where: {
+        id: params.chapterId,
+      }
+    })
+
+    const publishedChaptersInCourse = await db.chapter.findMany({
+      where: {
+        courseId: params.courseId,
+        isPublished: true
+      }
+    })
+
+    if(!publishedChaptersInCourse.length){
+      await db.course.update({
+        where: {
+          id: params.courseId,
+        },
+        data: {
+          isPublished: false
+        }
+      })
+    }
+
+    return NextResponse.json(deletedChapter)
+  } catch (error) {
+    console.log('[CHAPTER_ID_DELETE]', error)
+
+    return new NextResponse("알 수 없는 오류", { status: 500 })
+  }
+}
 
 export async function PATCH(
   req: Request,

@@ -50,7 +50,7 @@ export default async function CourseIdPage({
     },
   })
 
-  if (!course){
+  if (!course) {
     return redirect("/")
   }
 

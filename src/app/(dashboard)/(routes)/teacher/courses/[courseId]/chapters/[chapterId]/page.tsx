@@ -9,6 +9,9 @@ import { IconBadge } from "@/components/ui/icon-badge"
 import { ChapterTitleForm } from "./_components/chapter-title-form"
 import { ChapterDescriptionForm } from "./_components/chapter-description-form"
 import { ChapterAccessForm } from "./_components/chapter-access-form"
+import {
+  ChapterVideoForm
+} from "@/app/(dashboard)/(routes)/teacher/courses/[courseId]/chapters/[chapterId]/_components/chapter-video-form";
 
 export default async function ChapterId({
   params
@@ -114,6 +117,11 @@ export default async function ChapterId({
               영상 등록
             </h2>
           </div>
+          <ChapterVideoForm
+            initialData={chapter}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+          />
         </div>
       </div>
     </div>

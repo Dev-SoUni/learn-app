@@ -9,9 +9,9 @@ import { CourseNavbar } from "./_components/course-navbar"
 import { CourseSidebar } from "./_components/course-sidebar"
 
 export default async function CourseLayout({
-                                             params,
-                                             children,
-                                           }: {
+ params,
+ children,
+}: {
   params: { courseId: string }
   children: React.ReactNode
 }) {

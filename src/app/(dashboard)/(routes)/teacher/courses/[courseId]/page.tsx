@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react"
 
 import { db } from "@/lib/db"
-import { IconBadge } from "@/components/ui/icon-badge"
+import { IconBadge } from "@/components/icon-badge"
 import { Banner } from "@/components/banner"
 
 import { TitleForm } from "./_components/title-form"

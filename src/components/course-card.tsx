@@ -3,7 +3,7 @@ import Image from "next/image"
 import { BookOpen } from "lucide-react"
 
 import { formatPrice } from "@/lib/format"
-import { IconBadge } from "@/components/ui/icon-badge"
+import { IconBadge } from "@/components/icon-badge"
 import { CourseProgress } from "@/components/course-progress"
 
 interface CourseCardProps {

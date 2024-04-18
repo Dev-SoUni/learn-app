@@ -6,7 +6,7 @@ import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react"
 
 import { db } from "@/lib/db"
 import { Banner } from "@/components/banner"
-import { IconBadge } from "@/components/ui/icon-badge"
+import { IconBadge } from "@/components/icon-badge"
 
 import { ChapterTitleForm } from "./_components/chapter-title-form"
 import { ChapterDescriptionForm } from "./_components/chapter-description-form"

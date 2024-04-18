@@ -3,6 +3,8 @@ import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 
 import { db } from "@/lib/db"
+import { CourseProgress } from "@/components/course-progress"
+
 import { CourseSidebarItem } from "./course-sidebar-item"
 
 interface CourseSidebarProps {
@@ -38,7 +40,14 @@ export async function CourseSidebar({
         <h1 className="font-semibold">
           {course.title}
         </h1>
-        {/* check purchase anf add progress*/}
+        {purchase && (
+          <div className="mt-10">
+            <CourseProgress
+              variant="default"
+              value={progressCount}
+            />
+          </div>
+        )}
       </div>
       <div className="flex flex-col w-full">
         {course.chapters.map((chapter) => (

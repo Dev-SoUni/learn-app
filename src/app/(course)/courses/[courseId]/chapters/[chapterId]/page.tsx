@@ -9,6 +9,7 @@ import { Preview } from "@/components/preview"
 
 import { VideoPlayer } from "./_components/video-player"
 import { CourseEnrollButton } from "./_components/course-enroll-button"
+import { CourseProgressButton } from "./_components/course-progress-button"
 
 export default async function ChapterIdPage({
   params
@@ -40,7 +41,7 @@ export default async function ChapterIdPage({
   }
 
   const isLocked = !chapter.isFree && !purchase
-  const completeOneEnd = !purchase && !userProgress?.isCompleted
+  const completeOnEnd = !!purchase && !userProgress?.isCompleted
 
   return (
     <div>
@@ -65,7 +66,7 @@ export default async function ChapterIdPage({
             nextChapterId={nextChapter?.id}
             playbackId={muxData?.playbackId!}
             isLocked={isLocked}
-            completeOnEnd={completeOneEnd}
+            completeOnEnd={completeOnEnd}
           />
         </div>
         <div>
@@ -74,7 +75,12 @@ export default async function ChapterIdPage({
               {chapter.title}
             </h2>
             {purchase ? (
-              <div></div>
+              <CourseProgressButton
+                chapterId={params.chapterId}
+                courseId={params.courseId}
+                nextChapterId={nextChapter?.id}
+                isCompleted={!!userProgress?.isCompleted}
+              />
             ) : (
               <CourseEnrollButton
                 courseId={params.courseId}

@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Sidebar } from "./_components/sidebar"
+// import { Sidebar } from "./_components/sidebar"
 import { Navbar } from "./_components/navbar"
 
 export default function DashboardLayout({

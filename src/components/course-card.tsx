@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import cn from "clsx"
 import { BookOpen } from "lucide-react"
 
 import { formatPrice } from "@/lib/format"
@@ -27,12 +28,15 @@ export const CourseCard = ({
 }: CourseCardProps) => {
 
   return (
-    <Link href={`/courses/${id}`}>
+    <Link href={`/courses/${id}`} className="group">
       <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
           <Image
             fill
-            className="object-cover"
+            className={cn(
+              "object-cover duration-300 transition",
+              "group-hover:scale-105",
+            )}
             alt={title}
             src={imageUrl}
           />

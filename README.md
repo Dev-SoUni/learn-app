@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TeachLearn
 
-## Getting Started
+`TeachLearn`은 학생, 선생님을 위한 종합 학습관리 웹 애플리케이션입니다.
 
-First, run the development server:
+### 주요 기능
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 🔐 Clerk
+- 📀 Prisma
+- 📊 통계 대시보드 (선생님, 학생 별개)
+- 📚 강좌 개설, 조회, 수정, 삭제
+- 📚 챕터 등록, 조회, 수정, 삭제
+- 🖱️ 드래그 & 드랍을 통한 챕터 순서 변경
+- 🔎 데이터 검색
+- 🌠 이미지 및 첨부 파일 ([uploadthing](https://uploadthing.com/))
+- 🎥 미디어 플레이어 ([Mux](https://www.mux.com/))
+- 🧾 강좌 결제 ([Stripe](https://stripe.com/))
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 시작하기
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. 패키지 설치
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+    ```shell
+    npm install
+    ```
 
-## Learn More
+2. 환경 변수
 
-To learn more about Next.js, take a look at the following resources:
+    - `.env.example` 파일을 복사하여 `.env` 파일을 생성합니다.
+    - `.env` 파일의 환경 변수들을 알맞게 설정합니다.
+        - `Clerk`, `Stripe`, `Uploadthing`, `Mux`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. 데이터베이스 구성
 
-## Deploy on Vercel
+    ```shell
+    # 개발 데이터베이스 실행
+    npm run service
+    
+    # 테이블 생성
+    npx prisma db push
+    
+    # 기본 데이터 추가
+    node ./scripts/seed.ts
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. 서비스 실행
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    ```shell
+    # Stripe
+    stripe listen --forward-to localhost:3000/api/webhook
+    
+    # Web
+    npm run dev
+    ```
+
+### 가이드
+
+- 개발 환경에서 테스트 결제를 시도하기 위해서는 아래 정보를 통해 결제해야 합니다.
+
+    ```json
+    {
+      "카드 정보": "4242 4242 4242 4242",
+      "유효 기간": "(과거가 아니라면 상관 없음)",
+      "CVC": "상관 없음",
+      "카드 소유자 이름": "상관 없음",
+      "국가 또는 지역": "상관 없음"
+    }
+    ```
